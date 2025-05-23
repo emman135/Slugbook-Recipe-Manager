@@ -22,13 +22,12 @@ import re
 from py4web import action, request, abort, redirect
 from .common import auth
 
-
 @action("index")
 @action.uses("index.html", auth.user, T)
 def index():
     user = auth.get_user()
     ingredients_form = Form(db.ingredients)
-    # Recipe form WITHOUT author field (hidden)
+    # Recipe form without allowing author field to be editable
     recipes_form = Form(
         db.recipes,
         fields=["name", "type", "description", "image", "instruction_steps", "servings"],
@@ -48,3 +47,12 @@ def index():
         )
         redirect(URL("index"))
     return {"user": user, "ingredients_form": ingredients_form, "recipes_form": recipes_form}
+
+@action("/recipe/api/recipes",method=["GET"])
+@action.uses(db)
+def add_bird():
+    # returns all recipes in the database
+    rows = db(db.recipes).select().as_list()
+    print("returning recipes: ", rows)
+    return {"recipes": rows}
+

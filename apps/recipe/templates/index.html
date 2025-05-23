@@ -7,30 +7,6 @@
     <title>Recipe Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
-    <style>
-        /* Additional styles for accordion behavior */
-        .logo {
-            background-color: #59F1C7;
-        }
-
-        .logo img {
-            width: 200px;
-        }
-
-        .errors {
-            background-color: crimson
-        }
-
-        .button.tag {
-            background-color: #eee;
-        }
-
-        .button.tag.selected {
-            background-color: #007BFF;
-            /* Bootstrap blue */
-            color: white;
-        }
-    </style>
 </head>
 
 <body id="app">
@@ -51,16 +27,34 @@
                 <strong>Recipes</strong>
                 [[=recipes_form]]
             </div>
-            <!-- Posts
-            <div class="control">
-                <textarea class="post-content" id="postContent" placeholder="Post Content"></textarea>
-                <button class="button submit-content" v-on:click="add_post()">Submit Post</button>
-            </div> -->
         </div>
         <div class="column">
 
             <div>
                 <strong>Search bar/ recipe cards here?</strong>
+            </div>
+            <div>
+                <article v-for="recipe in filtered_recipes">
+                    <!-- display all recipe cards that match the search query, which is currently nothing. -->
+                    <div class="card">
+                        <div class="card-header-title">
+                            <div class="card-header-title">{{recipe.name}}</div>
+                            <div class="card-content">Type: {{recipe.type}}</div>
+                        </div>
+                        <div>-------------bad divider----------</div>
+                        <div class="card-content">
+                            <div v-if="recipe.image">
+                                <div>supposed to be an image but it doesn't work idk why</div>
+                                <div>{{recipe.image}}</div>
+                            </div>
+                            <div><strong>Description: </strong> </div>
+                            <div>{{recipe.description}}</div>
+                            <div><strong>Instructions: </strong> </div>
+                            <div>{{recipe.instruction_steps}}</div>
+                            <div><strong>Servings: </strong> {{recipe.servings}}</div>
+                        </div>
+                    </div>
+                </article>
             </div>
         </div>
     </div>
