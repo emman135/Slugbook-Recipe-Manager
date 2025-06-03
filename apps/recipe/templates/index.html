@@ -13,13 +13,13 @@
 <script src="[[=URL('static', 'js/index.js')]]"></script>
 [[end]]
 -->
+<head>
+    <link rel="stylesheet" href="/recipe/static/css/home.css">
+</head>
 
 <div id="app">
-    <div class="section">
+    <div class="welcome">
         <strong>Welcome [[=user['first_name']]]</strong>
-        <form action="[[=URL('auth/logout')]]" method="post" style="display:inline;">
-            <button type="submit" class="button is-light">Logout</button>
-        </form>
     </div>
     <div class="columns">
         <div class="column">
@@ -27,40 +27,68 @@
                 <strong>Ingredients</strong>
                 [[=ingredients_form]]
             </div>
-            <div>-------------------------bad divider-----------------------------------</div>
+            <hr>
             <div>
                 <strong>Recipes</strong>
+                <button id="openRecipeForm">Add New Recipe</button>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div id="recipeModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2><strong>New Recipe</strong></h2>
                 [[=recipes_form]]
             </div>
         </div>
-        <div class="column">
 
-            <div>
-                <strong>Search bar/ recipe cards here?</strong>
-            </div>
-            <div>
-                <article v-for="recipe in filtered_recipes">
-                    <!-- display all recipe cards that match the search query, which is currently nothing. -->
-                    <div class="card">
-                        <div class="card-header-title">
-                            <div class="card-header-title">{{recipe.name}}</div>
-                            <div class="card-content">Type: {{recipe.type}}</div>
-                        </div>
-                        <div>-------------bad divider----------</div>
-                        <div class="card-content">
-                            <div v-if="recipe.image">
-                                <div>supposed to be an image but it doesn't work idk why</div>
-                                <div>{{recipe.image}}</div>
+        <div class="column">
+            <div class="field">
+                <p><strong>Recipes</strong></p>
+                <label class="label">Search Recipes</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Search by name or type..."
+                        @keyup="search_recipes($event.target.value)" />
+                    <article v-for="recipe in filtered_recipes">
+                        <!-- display all recipe cards that match the search query -->
+                        <div class="card">
+                            <header class="card-header">
+                                <div class="card-header-title">
+                                    <div class="card-header-title">{{recipe.name}}</div>
+                                    <div class="card-content">Type: {{recipe.type}}</div>
+                                </div>
+                            </header>
+                            <div class="card-content">
+                                <img v-if="recipe.image" :src="`/recipe/download/${recipe.image}`" alt="Recipe Image" />
+                                <div><strong>Description: </strong> </div>
+                                <div>{{recipe.description}}</div>
+                                <div><strong>Instructions: </strong> </div>
+                                <div>{{recipe.instruction_steps}}</div>
+                                <div><strong>Servings: </strong> {{recipe.servings}}</div>
                             </div>
-                            <div><strong>Description: </strong> </div>
-                            <div>{{recipe.description}}</div>
-                            <div><strong>Instructions: </strong> </div>
-                            <div>{{recipe.instruction_steps}}</div>
-                            <div><strong>Servings: </strong> {{recipe.servings}}</div>
                         </div>
-                    </div>
-                </article>
+                    </article>
+                </div>
+                <div>
+
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("recipeModal");
+    const openBtn = document.getElementById("openRecipeForm");
+    const closeBtn = modal.querySelector(".close");
+
+    openBtn.onclick = () => modal.style.display = "block";
+    closeBtn.onclick = () => modal.style.display = "none";
+
+    window.onclick = function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+});
+</script>
