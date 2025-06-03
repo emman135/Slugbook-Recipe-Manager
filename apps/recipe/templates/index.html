@@ -20,9 +20,9 @@
 <div id="app">
     <div class="welcome">
         <strong>Welcome [[=user['first_name']]]</strong>
-        <form action="[[=URL('auth/logout')]]" method="post" style="display:inline;">
+        <!-- <form action="[[=URL('auth/logout')]]" method="post" style="display:inline;">
             <button type="submit" class="button is-light">Logout</button>
-        </form>
+        </form> -->
     </div>
     <div class="columns">
         <div class="column">
@@ -33,9 +33,18 @@
             <hr>
             <div>
                 <strong>Recipes</strong>
+                <button id="openRecipeForm">Add New Recipe</button>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div id="recipeModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>New Recipe</h2>
                 [[=recipes_form]]
             </div>
         </div>
+
         <div class="column">
             <div class="field">
                 <p><strong>Recipes</strong></p>
@@ -51,7 +60,6 @@
                                 <div class="card-content">Type: {{recipe.type}}</div>
                             </div>
                                                     <hr>
-=======
                             <div class="card-content">
                                 <img v-if="recipe.image" :src="`/recipe/download/${recipe.image}`" alt="Recipe Image" />
                                 <div><strong>Description: </strong> </div>
@@ -69,3 +77,19 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("recipeModal");
+    const openBtn = document.getElementById("openRecipeForm");
+    const closeBtn = modal.querySelector(".close");
+
+    openBtn.onclick = () => modal.style.display = "block";
+    closeBtn.onclick = () => modal.style.display = "none";
+
+    window.onclick = function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+});
+</script>
