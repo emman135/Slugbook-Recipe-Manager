@@ -49,12 +49,12 @@
                             <div class="card-header-title">{{recipe.name}}</div>
                             <div class="card-content">Type: {{recipe.type}}</div>
                         </div>
+<<<<<<< HEAD
                         <hr>
+=======
+>>>>>>> refs/remotes/origin/main
                         <div class="card-content">
-                            <div v-if="recipe.image">
-                                <div>supposed to be an image but it doesn't work idk why</div>
-                                <div>{{recipe.image}}</div>
-                            </div>
+                            <img v-if="recipe.image" :src="`/recipe/download/${recipe.image}`" alt="Recipe Image" />
                             <div><strong>Description: </strong> </div>
                             <div>{{recipe.description}}</div>
                             <div><strong>Instructions: </strong> </div>
