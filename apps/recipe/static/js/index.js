@@ -11,7 +11,11 @@ app.config = {
         };
     },
     methods: {
-
+        search_recipes: function (input_text) {
+            // console.log(input_text)
+            const text = input_text.toLowerCase();
+            this.filtered_recipes = this.recipes.filter(recipe => (recipe.name.toLowerCase().includes(text) | recipe.type.toLowerCase().includes(text)));
+        },
     }
 }
 
