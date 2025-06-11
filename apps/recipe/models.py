@@ -56,6 +56,38 @@ def populate_db():
             author=None,  # No author, imported from API
         )
 
+    for i in range(1,21):
+        ingredient_name = meal.get(f"strIngredient{i}")
+        measure = meal.get(f"strMeasure{i}")
+
+        if ingredient_name and ingredient_name.strip():
+                ingredient = db.ingredients.get_or_insert(
+                    name=ingredient_name,
+                    defaults={
+                        "unit": 0, "calories_per_unit": 0, "description": "Imported"
+                    }
+                )
+                
+                quantity = 0
+                if measure and measure.strip():
+                    num_search = re.match(r'[\d\.\/]+', measure.strip())
+                    if num_search:
+                        num_str = num_search.group(0)
+                        try:
+                            if "/" in num_str:
+                                parts = num_str.split("/")
+                                if len(parts) == 2 and float(parts[1]) != 0:
+                                    quantity = int(float(parts[0]) / float(parts[1]))
+                            else:
+                                quantity = int(float(num_str))
+                        except (ValueError, ZeroDivisionError):
+                            quantity = 0
+                
+                db.link.insert(
+                    recipe_id=recipe_id,
+                    ingredient_id=ingredient.id,
+                    quantity_per_serving=quantity,
+                )
 
 
 db.commit()
