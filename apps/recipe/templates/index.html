@@ -51,7 +51,7 @@
                         @keyup="search_recipes($event.target.value)" />
                     <article v-for="recipe in filtered_recipes">
                         <!-- display all recipe cards that match the search query -->
-                        <div class="card">
+                        <div class="card mb-3">
                             <header class="card-header">
                                 <div class="card-header-title">
                                     <div class="card-header-title">{{recipe.name}}</div>
