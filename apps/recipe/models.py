@@ -33,10 +33,6 @@ db.define_table(
 )
 
 def parse_measure(measure_str):
-    """
-    Parses a measurement string (e.g., "1 1/2 tsp") into an integer quantity and a string unit.
-    Returns: (integer, string), for example (1, "tsp")
-    """
     if not measure_str or not isinstance(measure_str, str):
         return 0, "" # Return defaults if input is invalid
 
