@@ -3,12 +3,13 @@ from .common import Field, db, auth
 import requests
 import re
 import random
+from fractions import Fraction
 
 
 db.define_table(
     "ingredients",
     Field("name", type="string", requires=IS_NOT_EMPTY()),
-    Field("unit", type="string", requires=IS_NOT_EMPTY()),
+    Field("unit", type="string"),
     Field("calories_per_unit", type="integer", requires=IS_INT_IN_RANGE(0,1000)),
     Field("description", type="string", requires=IS_NOT_EMPTY()),
 )
@@ -30,6 +31,52 @@ db.define_table(
     Field("ingredient_id", "reference ingredients", requires=IS_NOT_EMPTY()),
     Field("quantity_per_serving", type="integer", requires=IS_INT_IN_RANGE(0,1000)),
 )
+
+# Add this after your imports at the top of models.py
+from fractions import Fraction
+
+def parse_measure(measure_str):
+    """
+    Parses a measurement string (e.g., "1 1/2 tsp") into an integer quantity and a string unit.
+    Returns: (integer, string), for example (1, "tsp")
+    """
+    if not measure_str or not isinstance(measure_str, str):
+        return 0, "" # Return defaults if input is invalid
+
+    measure_str = measure_str.strip()
+    
+    # Regex to find an initial number (including fractions/spaces) and the text that follows.
+    # Group 1: The numerical part (e.g., "1 1/2", "200", "1/4")
+    # Group 2: The unit part (e.g., "tsp", "g", "can")
+    match = re.match(r'([\d\s\.\/]+)\s*(.*)', measure_str)
+
+    quantity = 1
+    unit = ""
+
+    if match:
+        quantity_str = match.group(1).strip()
+        unit_str = match.group(2).strip()
+        
+        # Safely convert the quantity string (like "1 1/2") to a number
+        try:
+            # Handle mixed numbers like "1 1/2" by splitting and summing
+            if ' ' in quantity_str:
+                total_fraction = sum(Fraction(part) for part in quantity_str.split())
+                quantity = float(total_fraction)
+            else: # Handle "1/2" or "200"
+                quantity = float(Fraction(quantity_str))
+        except (ValueError, ZeroDivisionError):
+            quantity = 1 # Default to 0 if conversion fails
+        
+        # Clean up the unit string, taking only the first word
+        unit = unit_str.split(' ')[0]
+
+    else:
+        # If no number is found, the whole string is the unit (e.g., "to serve")
+        unit = measure_str
+    
+    # Return the integer part of the quantity and the unit string
+    return int(quantity), unit
 
 # Connects to TheMealDB API and fills the database with recipes
 def populate_db():
@@ -64,27 +111,13 @@ def populate_db():
             measure = meal.get(f"strMeasure{i}")
 
             if ingredient_name and ingredient_name.strip():
+                    quantity, unit_str = parse_measure(measure)
                     ingredient = db.ingredients.insert(
                         name=ingredient_name,
-                        unit="g",
+                        unit=unit_str,
                         calories_per_unit=random.randint(1, 50),
                         description="imported",
                     )
-                    
-                    quantity = 0
-                    if measure and measure.strip():
-                        num_search = re.match(r'[\d\.\/]+', measure.strip())
-                        if num_search:
-                            num_str = num_search.group(0)
-                            try:
-                                if "/" in num_str:
-                                    parts = num_str.split("/")
-                                    if len(parts) == 2 and float(parts[1]) != 0:
-                                        quantity = int(float(parts[0]) / float(parts[1]))
-                                else:
-                                    quantity = int(float(num_str))
-                            except (ValueError, ZeroDivisionError):
-                                quantity = 0
                     
                     db.link.insert(
                         recipe_id=recipe_id,
