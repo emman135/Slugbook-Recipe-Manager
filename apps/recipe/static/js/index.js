@@ -37,7 +37,6 @@ app.config = {
             new_ingredient: clone(app.empty_ingredient),
             ingredient_search: "",
             editing: { current: null },
-            logged_in_id: window.LOGGED_IN_ID,
         };
     },
     methods: {

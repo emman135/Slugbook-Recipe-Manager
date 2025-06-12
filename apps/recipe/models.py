@@ -19,9 +19,7 @@ db.define_table(
     Field("instruction_steps",type="string", requires=IS_NOT_EMPTY()),
     Field("servings", type="integer", requires=IS_INT_IN_RANGE(0,1000)),
     Field("author", "reference auth_user", requires=IS_NOT_EMPTY(), readable=False, writable=False),
-    Field("total_calories", "integer", default=0, readable=True, writable=False),
 )
-
 
 db.define_table(
     "link",

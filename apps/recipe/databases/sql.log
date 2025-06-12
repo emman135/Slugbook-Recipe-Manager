@@ -48,6 +48,3 @@ CREATE TABLE "link"(
     "quantity_per_serving" INTEGER
 );
 success!
-timestamp: 2025-06-12T09:44:30.907603
-ALTER TABLE "recipes" ADD "total_calories" INTEGER;
-success!
