@@ -61,6 +61,14 @@ def api_ingredients():
 def api_recipes():
     return dict(recipes=db(db.recipes).select().as_list())
 
+@action("api/recipe/<rid:int>", method=["GET"])
+@action.uses(db)
+def api_one_recipe(rid):
+    rec = db.recipes[rid] or abort(404)
+    links = db(db.link.recipe_id == rid).select().as_list()
+    return dict(recipe=rec, ingredients=links)
+
+
 # create or update
 @action("api/recipe", method=["POST", "PUT"])
 @action.uses(db, auth.user)

@@ -23,16 +23,20 @@ function ajax(url, method, data, cb) {
 const app = {
   data() {
     return {
+      // ids
+      user_id: window.USER_ID || null,
+      editId:  null,                 // null = new, else recipe id being edited
+
       // db tables
       recipes: [],
       filtered_recipes: [],
       ingredients: [],
       selected_ingredients: [],
 
-      // search boxes
+      // search
       ingredient_search: "",
 
-      // modal & form 
+      // modal & form
       showModal: false,
       newRecipe: {
         name: "",
@@ -40,8 +44,8 @@ const app = {
         description: "",
         instruction_steps: "",
         servings: 1,
-        selected: [],        // [ingredient id, …]
-        qty: {},             // {id: quantity_per_serving}
+        selected: [],
+        qty: {},
         imageFile: null,
       },
     };
@@ -54,10 +58,7 @@ const app = {
       let perServing = 0;
       this.newRecipe.selected.forEach((id) => {
         const ing = this.ingredients.find((x) => x.id === id);
-        if (ing) {
-          const q = this.newRecipe.qty[id] || 1;
-          perServing += q * ing.calories_per_unit;
-        }
+        if (ing) perServing += (this.newRecipe.qty[id] || 1) * ing.calories_per_unit;
       });
       return perServing * (this.newRecipe.servings || 1);
     },
@@ -83,6 +84,7 @@ const app = {
 
     // modal controls
     openModal() {
+      this.editId = null;           // starting a NEW recipe
       this.resetForm();
       this.showModal = true;
     },
@@ -98,54 +100,75 @@ const app = {
         servings: 1,
         selected: [],
         qty: {},
+        imageFile: null,
       };
+    },
+
+    // start editing an existing recipe
+    startEdit(id) {
+      ajax(`/recipe/api/recipe/${id}`, "GET", null, (res) => {
+        const r = res.recipe;
+        this.editId = id;
+        this.newRecipe = {
+          name: r.name,
+          type: r.type,
+          description: r.description,
+          instruction_steps: r.instruction_steps,
+          servings: r.servings,
+          selected: res.ingredients.map((l) => l.ingredient_id),
+          qty: Object.fromEntries(
+            res.ingredients.map((l) => [l.ingredient_id, l.quantity_per_serving])
+          ),
+          imageFile: null,
+        };
+        this.showModal = true;
+      });
     },
 
     // CRUD calls
     saveRecipe() {
-    if (!this.newRecipe.name || !this.newRecipe.type ||
-        this.newRecipe.selected.length === 0) {
+      if (
+        !this.newRecipe.name ||
+        !this.newRecipe.type ||
+        this.newRecipe.selected.length === 0
+      ) {
         alert("Fill required fields and pick at least one ingredient.");
         return;
-    }
+      }
 
-    /* -------- build multipart/form-data -------- */
-    const fd = new FormData();
-    fd.append("name",         this.newRecipe.name);
-    fd.append("type",         this.newRecipe.type);
-    fd.append("description",  this.newRecipe.description);
-    fd.append("instruction_steps", this.newRecipe.instruction_steps);
-    fd.append("servings",     this.newRecipe.servings);
+      const fd = new FormData();
+      ["name", "type", "description", "instruction_steps", "servings"].forEach((k) =>
+        fd.append(k, this.newRecipe[k])
+      );
+      fd.append(
+        "ingredients",
+        JSON.stringify(
+          this.newRecipe.selected.map((id) => ({
+            id,
+            qty: this.newRecipe.qty[id] || 1,
+          }))
+        )
+      );
+      if (this.newRecipe.imageFile) fd.append("image", this.newRecipe.imageFile);
 
-    // ingredients list as JSON string
-    fd.append("ingredients",
-                JSON.stringify(
-                this.newRecipe.selected.map(id => ({
-                    id,
-                    qty: this.newRecipe.qty[id] || 1,
-                }))
-                ));
+      const method = this.editId ? "PUT" : "POST";
+      if (this.editId) fd.append("id", this.editId);
 
-    if (this.newRecipe.imageFile) {
-        fd.append("image", this.newRecipe.imageFile);
-    }
-
-    /* -------- POST -------- */
-    fetch("/recipe/api/recipe", {
-        method: "POST",
+      fetch("/recipe/api/recipe", {
+        method,
         body: fd,
         credentials: "same-origin",
-    })
-    .then(r => r.json())
-    .then(res => {
-        alert("Recipe saved! Total calories = " + res.total_calories);
-        this.closeModal();
-        this.loadRecipes();
-    })
-    .catch(() => alert("Network error"));
+      })
+        .then((r) => r.json())
+        .then((res) => {
+          alert("Recipe saved! Total calories = " + res.total_calories);
+          this.closeModal();
+          this.loadRecipes();
+        })
+        .catch(() => alert("Network error"));
     },
 
-    // load data
+    /* data loaders */
     loadRecipes() {
       ajax("/recipe/api/recipes", "GET", null, (res) => {
         this.recipes = res.recipes;
@@ -160,9 +183,7 @@ const app = {
     },
   },
 
-  /* ---------------------------------------------------------------- */
-  /* life-cycle                                                       */
-  /* ---------------------------------------------------------------- */
+  // life-cycle
   mounted() {
     this.loadRecipes();
     this.loadIngredients();

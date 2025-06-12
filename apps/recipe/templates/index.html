@@ -12,6 +12,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
 [[end]]
 
+
+<script>window.USER_ID = [[=user["id"]]];</script>
+
 <!-- ─────────────────────────  BODY  ──────────────────────────── -->
 <div id="app" class="p-4">
 
@@ -43,6 +46,11 @@
             <!-- recipe cards -->
             <article v-for="recipe in filtered_recipes" :key="recipe.id" class="card mb-3">
                 <header class="card-header">
+                    <button  v-if="recipe.author === user_id"
+                      class="button is-small is-light ml-2"
+                      @click="startEdit(recipe.id)">
+                      ✏️ Edit
+                    </button>
                     <p class="card-header-title">{{ recipe.name }}</p>
                     <span class="mr-3">Type: {{ recipe.type }}</span>
                     <span>Total Cal: {{ recipe.total_calories }}</span>
