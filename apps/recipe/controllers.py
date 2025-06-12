@@ -53,6 +53,22 @@ def index():
 def add_bird():
     # returns all recipes in the database
     rows = db(db.recipes).select().as_list()
-    print("returning recipes: ", rows)
+    #print("returning recipes: ", rows)
     return {"recipes": rows}
+
+@action("/recipe/api/ingredients",method=["GET"])
+@action.uses(db)
+def add_bird():
+    # returns all recipes in the database
+    rows = db(db.ingredients).select().as_list()
+    #print("returning ingredients: ", rows)
+    return {"ingredients": rows}
+
+@action("/recipe/api/links",method=["GET"])
+@action.uses(db)
+def add_bird():
+    # returns all recipes in the database
+    rows = db(db.link).select().as_list()
+    #print("returning links: ", rows)
+    return {"links": rows}
 

@@ -111,3 +111,60 @@ CREATE TABLE "auth_user"(
 );
 success!
 success!
+DROP TABLE "ingredients";
+success!
+DROP TABLE "recipes";
+timestamp: 2025-06-11T21:05:54.364850
+CREATE TABLE "ingredients"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "unit" CHAR(512),
+    "calories_per_unit" INTEGER,
+    "description" CHAR(512)
+);
+success!
+DROP TABLE "ingredients";
+success!
+DROP TABLE "recipes";
+timestamp: 2025-06-11T21:08:00.284952
+CREATE TABLE "ingredients"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "unit" CHAR(512),
+    "calories_per_unit" INTEGER,
+    "description" CHAR(512)
+);
+success!
+DROP TABLE "ingredients";
+success!
+DROP TABLE "recipes";
+timestamp: 2025-06-11T21:08:30.515775
+CREATE TABLE "ingredients"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "unit" CHAR(512),
+    "calories_per_unit" INTEGER,
+    "description" CHAR(512)
+);
+success!
+DROP TABLE "ingredients";
+success!
+DROP TABLE "recipes";
+timestamp: 2025-06-11T21:15:31.994832
+CREATE TABLE "ingredients"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "unit" CHAR(512),
+    "calories_per_unit" INTEGER,
+    "description" CHAR(512)
+);
+success!
+DELETE FROM "link";
+DELETE FROM sqlite_sequence WHERE name='link'
+success!
+DELETE FROM "recipes";
+DELETE FROM sqlite_sequence WHERE name='recipes'
+success!
+DELETE FROM "ingredients";
+DELETE FROM sqlite_sequence WHERE name='ingredients'
+success!

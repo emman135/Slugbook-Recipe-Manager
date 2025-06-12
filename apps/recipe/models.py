@@ -3,6 +3,7 @@ from .common import Field, db, auth
 import requests
 import re
 
+
 db.define_table(
     "ingredients",
     Field("name", type="string", requires=IS_NOT_EMPTY()),
@@ -41,7 +42,7 @@ def populate_db():
             response = requests.get(base_api_url + letter)
             response.raise_for_status()
             data = response.json()
-            print(data)
+            #print(data)
             if (data["meals"]):
                 all_meals.extend(data["meals"])
         except requests.exceptions.RequestException as e:
@@ -58,39 +59,48 @@ def populate_db():
             author=None,  # No author, imported from API
         )
 
-    for i in range(1,21):
-        ingredient_name = meal.get(f"strIngredient{i}")
-        measure = meal.get(f"strMeasure{i}")
+        for i in range(1,21):
+            ingredient_name = meal.get(f"strIngredient{i}")
+            measure = meal.get(f"strMeasure{i}")
 
-        if ingredient_name and ingredient_name.strip():
-                ingredient = db.ingredients.update_or_insert(
-                    name=ingredient_name,
-                    unit="g",
-                    calories_per_unit=1,
-                    description="imported",
-                )
-                
-                quantity = 0
-                if measure and measure.strip():
-                    num_search = re.match(r'[\d\.\/]+', measure.strip())
-                    if num_search:
-                        num_str = num_search.group(0)
-                        try:
-                            if "/" in num_str:
-                                parts = num_str.split("/")
-                                if len(parts) == 2 and float(parts[1]) != 0:
-                                    quantity = int(float(parts[0]) / float(parts[1]))
-                            else:
-                                quantity = int(float(num_str))
-                        except (ValueError, ZeroDivisionError):
-                            quantity = 0
-                
-                db.link.insert(
-                    recipe_id=recipe_id,
-                    ingredient_id=ingredient.id,
-                    quantity_per_serving=quantity,
-                )
+            if ingredient_name and ingredient_name.strip():
+                    ingredient = db.ingredients.insert(
+                        name=ingredient_name,
+                        unit="g",
+                        calories_per_unit=1,
+                        description="imported",
+                    )
+                    
+                    quantity = 0
+                    if measure and measure.strip():
+                        num_search = re.match(r'[\d\.\/]+', measure.strip())
+                        if num_search:
+                            num_str = num_search.group(0)
+                            try:
+                                if "/" in num_str:
+                                    parts = num_str.split("/")
+                                    if len(parts) == 2 and float(parts[1]) != 0:
+                                        quantity = int(float(parts[0]) / float(parts[1]))
+                                else:
+                                    quantity = int(float(num_str))
+                            except (ValueError, ZeroDivisionError):
+                                quantity = 0
+                    
+                    db.link.insert(
+                        recipe_id=recipe_id,
+                        ingredient_id=ingredient.id,
+                        quantity_per_serving=quantity,
+                    )
 
-populate_db()
+if db(db.recipes).count() == 0:
+    populate_db()
+    db.commit()
+    print("Database population complete.")
+
+'''
+db.link.truncate()
+db.recipes.truncate()
+db.ingredients.truncate()
+'''
 
 db.commit()
