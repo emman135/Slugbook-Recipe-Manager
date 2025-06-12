@@ -32,9 +32,6 @@ db.define_table(
     Field("quantity_per_serving", type="integer", requires=IS_INT_IN_RANGE(0,1000)),
 )
 
-# Add this after your imports at the top of models.py
-from fractions import Fraction
-
 def parse_measure(measure_str):
     """
     Parses a measurement string (e.g., "1 1/2 tsp") into an integer quantity and a string unit.
@@ -63,19 +60,21 @@ def parse_measure(measure_str):
             if ' ' in quantity_str:
                 total_fraction = sum(Fraction(part) for part in quantity_str.split())
                 quantity = float(total_fraction)
-            else: # Handle "1/2" or "200"
+            else: 
                 quantity = float(Fraction(quantity_str))
         except (ValueError, ZeroDivisionError):
-            quantity = 1 # Default to 0 if conversion fails
+            quantity = 1
         
         # Clean up the unit string, taking only the first word
         unit = unit_str.split(' ')[0]
 
     else:
-        # If no number is found, the whole string is the unit (e.g., "to serve")
+        # If no number is found, the whole string is the unit (ex: "to serve")
         unit = measure_str
     
-    # Return the integer part of the quantity and the unit string
+    # Remove Unicode - if unit contains it change the unit to 'to serve'
+    if not unit.isascii():
+        unit = 'to serve'
     return int(quantity), unit
 
 # Connects to TheMealDB API and fills the database with recipes
@@ -135,5 +134,6 @@ db.link.truncate()
 db.recipes.truncate()
 db.ingredients.truncate()
 '''
+
 
 db.commit()

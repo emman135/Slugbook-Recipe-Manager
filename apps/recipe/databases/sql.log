@@ -195,3 +195,30 @@ success!
 DELETE FROM "ingredients";
 DELETE FROM sqlite_sequence WHERE name='ingredients'
 success!
+DELETE FROM "link";
+DELETE FROM sqlite_sequence WHERE name='link'
+success!
+DELETE FROM "recipes";
+DELETE FROM sqlite_sequence WHERE name='recipes'
+success!
+DELETE FROM "ingredients";
+DELETE FROM sqlite_sequence WHERE name='ingredients'
+success!
+DELETE FROM "link";
+DELETE FROM sqlite_sequence WHERE name='link'
+success!
+DELETE FROM "recipes";
+DELETE FROM sqlite_sequence WHERE name='recipes'
+success!
+DELETE FROM "ingredients";
+DELETE FROM sqlite_sequence WHERE name='ingredients'
+success!
+DELETE FROM "link";
+DELETE FROM sqlite_sequence WHERE name='link'
+success!
+DELETE FROM "recipes";
+DELETE FROM sqlite_sequence WHERE name='recipes'
+success!
+DELETE FROM "ingredients";
+DELETE FROM sqlite_sequence WHERE name='ingredients'
+success!
