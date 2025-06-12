@@ -42,7 +42,6 @@
             </div>
         </div>
 
-
         <div class="column">
             <div class="field">
                 <p><strong>Recipes</strong></p>
@@ -70,8 +69,29 @@
                         </div>
                     </article>
                 </div>
-                <div>
-
+            </div>
+        </div>
+        <div class="column">
+            <div class = "field">
+                <label class="label">Search Ingredients</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="text"
+                        placeholder="Search by name..."
+                        v-model="new_ingredient.name"
+                        v-on:keyup="search()"   
+                    />
+                    <p><strong>Ingredients</strong></p>
+                    <li v-for="ingredient in selected_ingredients">
+                        <p><strong>Name:</strong>{{ ingredient.name }}</p>
+                        <p><strong>Unit:</strong>{{ ingredient.unit }}</p>
+                        <p><strong>Description:</strong> 
+                            {{ ingredient.description }}</p>
+                        <p><strong>Calories Per Unit: </strong>
+                        {{ingredient.calories_per_unit}}</p>
+                        <hr>
+                    </li>
                 </div>
             </div>
         </div>

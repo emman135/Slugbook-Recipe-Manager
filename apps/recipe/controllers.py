@@ -23,16 +23,31 @@ from py4web import action, request, abort, redirect
 from .common import auth
 
 @action("index")
+@action("/")
 @action.uses("index.html", auth.user, T)
 def index():
     user = auth.get_user()
-    ingredients_form = Form(db.ingredients)
+    ingredients_form = Form(
+        db.ingredients,
+        fields=["name", "unit", "calories_per_unit", "description"],
+        dbio=False
+    )
     # Recipe form without allowing author field to be editable
     recipes_form = Form(
         db.recipes,
         fields=["name", "type", "description", "image", "instruction_steps", "servings"],
         dbio=False #disables automatic inserts
     )
+    
+    if ingredients_form.accepted:
+        print("Inserting ingredients:", ingredients_form.vars["name"])
+        db.ingredients.insert(
+            name=ingredients_form.vars["name"],
+            unit=ingredients_form.vars["unit"],
+            calories_per_unit=ingredients_form.vars["calories_per_unit"],
+            description=ingredients_form.vars["description"],
+        )
+        redirect(URL("index"))
     
     if recipes_form.accepted:
         print("Inserting recipe:", recipes_form.vars["name"])
@@ -50,9 +65,16 @@ def index():
 
 @action("/recipe/api/recipes",method=["GET"])
 @action.uses(db)
-def add_bird():
+def add_recipe():
     # returns all recipes in the database
     rows = db(db.recipes).select().as_list()
     print("returning recipes: ", rows)
     return {"recipes": rows}
 
+@action("/recipe/api/ingredients",method=["GET"])
+@action.uses(db)
+def add_ingredients():
+    # returns all recipes in the database
+    rows = db(db.ingredients).select().as_list()
+    print("returning ingredients: ", rows)
+    return {"ingredients": rows}

@@ -35,7 +35,7 @@ UPLOAD_FOLDER = required_folder(APP_FOLDER, "uploads")
 VERIFY_EMAIL = MODE != "development"
 
 # complexity of the password 0: no constraints, 50: safe!
-PASSWORD_ENTROPY = 0 if MODE == "development" else 50
+PASSWORD_ENTROPY = 0
 
 # account requires to be approved ?
 REQUIRES_APPROVAL = False

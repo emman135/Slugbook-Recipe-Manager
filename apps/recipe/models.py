@@ -3,10 +3,11 @@ from .common import Field, db, auth
 
 db.define_table(
     "ingredients",
+    # If we don't want duplicates we can add unique=True to name
     Field("name", type="string", requires=IS_NOT_EMPTY()),
     Field("unit", type="integer", requires=IS_INT_IN_RANGE(0,1000)),
     Field("calories_per_unit", type="integer", requires=IS_INT_IN_RANGE(0,1000)),
-    Field("description", type="string", requires=IS_NOT_EMPTY()),
+    Field("description", type="text", requires=IS_NOT_EMPTY()),
 )
 
 db.define_table(
