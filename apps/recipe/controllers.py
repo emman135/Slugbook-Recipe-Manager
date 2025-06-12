@@ -48,10 +48,23 @@ def index():
         redirect(URL("index"))
     return {"user": user, "ingredients_form": ingredients_form, "recipes_form": recipes_form}
 
+# SEARCH API - can search by recipe name and/or type (not case sensitive)
 @action("/recipe/api/recipes",method=["GET"])
-@action.uses(db)
-def add_bird():
-    rows = db(db.recipes).select().as_list()
+def get_recipes():
+    # get all recipies
+    query = db.recipes.id > 0
+
+    # Get parameters from the request
+    recipe_type = request.params.get('type')
+    recipe_name = request.params.get('name')
+
+    if recipe_type:
+        query &= (db.recipes.type.lower() == recipe_type.lower())
+
+    if recipe_name:
+        query &= (db.recipes.name.ilike(f"%{recipe_name}%"))
+
+    rows = db(query).select().as_list()
     return {"recipes": rows}
 
 @action("/recipe/api/ingredients",method=["GET"])
