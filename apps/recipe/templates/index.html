@@ -60,7 +60,13 @@
                                 </div>
                             </header>
                             <div class="card-content">
-                                <img v-if="recipe.image" :src="`/recipe/download/${recipe.image}`" alt="Recipe Image" />
+                                <img
+                                v-if="recipe.image"
+                                :src="recipe.image.startsWith('http') 
+                                        ? recipe.image 
+                                        : '/recipe/download/' + recipe.image"
+                                alt="Recipe Image"
+                                />
                                 <div><strong>Description: </strong> </div>
                                 <div>{{recipe.description}}</div>
                                 <div><strong>Instructions: </strong> </div>
