@@ -19,7 +19,7 @@ import re
 
 # Home page – shows ingredient form + lists (Vue handles recipe form)
 @action("index")
-@action("/")
+#@action("/")
 @action.uses("index.html", auth.user, T)
 def index():
     user = auth.get_user()
