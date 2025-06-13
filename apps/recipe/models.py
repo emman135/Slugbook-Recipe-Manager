@@ -1,6 +1,6 @@
 from py4web import URL
 from pydal.validators import *
-from .common import Field, db, auth
+from .common import Field, db, auth, settings
 import requests
 import re
 import random
