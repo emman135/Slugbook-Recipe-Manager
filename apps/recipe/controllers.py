@@ -117,11 +117,17 @@ def add_bird():
     rows = db(db.link).select().as_list()
     return {"links": rows}
 
+# For edit function (CHECKS IF USER ID IS THE AUTHOR OF RECIPE)
 @action("api/recipe/<rid:int>", method=["GET"])
-@action.uses(db)
+@action.uses(db, auth.user)
 def api_one_recipe(rid):
     rec = db.recipes[rid] or abort(404)
-    links = db(db.link.recipe_id == rid).select().as_list()
+
+    # Check uid is right
+    if rec.author != auth.user_id:
+        abort(403, "You are not allowed to view this recipe")
+
+    links = db(db.link.recipe_id == rid).select().as_list() 
     return dict(recipe=rec, ingredients=links)
 
 # create or update
