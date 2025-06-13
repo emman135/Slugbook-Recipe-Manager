@@ -26,7 +26,7 @@
     <div class="columns is-centered">
 
         <!-- ───── LEFT COLUMN  –  forms ─────────────────────────── -->
-        <div class="column is-two-fifths">
+        <div class="column is-one-quarter">
             <h3 class="title is-5">Add Ingredient</h3>
             [[=ingredients_form]]
             <hr>
@@ -67,12 +67,12 @@
 
             <!-- recipe cards -->
             <article v-for="recipe in filtered_recipes" :key="recipe.id" class="card">
-                <header class="card-header">
-                    <p class="card-header-title has-text-centered p-2">{{ recipe.name }}</p>
-                    <span class="has-text-centered p-2">Type: {{ recipe.type }}</span>
-                    <span class="has-text-centered p-2">Total Cal: {{ recipe.total_calories }}</span>
+                <header class="card-header is-flex is-justify-content-space-between is-align-items-center">
+                    <p class="card-header-title has-text-centered">{{ recipe.name }}</p>
+                    <span class="has-text-centered p-4">Type: {{ recipe.type }}</span>
+                    <span class="has-text-centered p-4">Total Cal: {{ recipe.total_calories }}</span>
                     <button  v-if="recipe.author === user_id"
-                        class="button is-light ml-2"
+                        class="button is-light m-2"
                         @click="startEdit(recipe.id)">
                     
                     <span class="icon is-small">
@@ -109,7 +109,7 @@
         </div>
 
         <!-- ───── RIGHT COLUMN – ingredient search / list ────────── -->
-        <div class="column is-two-fifths">
+        <div class="column is-one-quarter">
             <h3 class="title is-5">Ingredients</h3>
 
             <div class="field mt-2 pb-1">
