@@ -47,6 +47,7 @@ button {
 button:hover {
     background-color: white;
 }
+
 /* Columns */
 .columns {
     max-width:100%;
@@ -69,6 +70,13 @@ button:hover {
     display: block;
     margin-bottom: 10px;
     font-size: 1.2rem;
+}
+
+.select select.dropdown {
+    background: #66d1ff;
+    color: #fff;
+    border: none;
+    /*border: 1px solid #66d1ff;*/
 }
 
 /* Search bar */
