@@ -74,7 +74,7 @@
                             {{
                               ing.qty === 0
                                 ? ing.unit + ' – ' + ing.name
-                                : ing.qty + ' ' + ing.unit + ' – ' + ing.name
+                                : ing.qty * recipe.servings + ' ' + ing.unit + ' – ' + ing.name
                             }}
                           </li>
                     </ul>
