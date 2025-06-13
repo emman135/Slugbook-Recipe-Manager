@@ -72,9 +72,13 @@
                     <span class="has-text-centered p-2">Type: {{ recipe.type }}</span>
                     <span class="has-text-centered p-2">Total Cal: {{ recipe.total_calories }}</span>
                     <button  v-if="recipe.author === user_id"
-                      class="button is-light ml-2"
-                      @click="startEdit(recipe.id)">
-                      ✏️ Edit
+                        class="button is-light ml-2"
+                        @click="startEdit(recipe.id)">
+                    
+                    <span class="icon is-small">
+                        <i class="fas fa-pen"></i>
+                    </span>
+                    <span>Edit</span>
                     </button>
                 </header>
 
