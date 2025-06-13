@@ -8,9 +8,10 @@ body {
 
 /* Container section */
 #app {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 40px;
+    margin: 0;
 }
 
 /* Header */
@@ -37,7 +38,6 @@ hr {
     
 }
 button {
-    background-color: #000000;
     color: white;
     border: none;
     border-radius: 4px;
@@ -45,18 +45,17 @@ button {
 }
 
 button:hover {
-    background-color: #923e3e;
+    background-color: white;
 }
 /* Columns */
 .columns {
+    max-width:100%;
     display: flex;
-    gap: 24px;
 }
 
 .column {
     flex: 1;
 }
-
 /* Boxes for forms */
 .column > div {
     background: #fff;

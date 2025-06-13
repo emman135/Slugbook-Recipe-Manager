@@ -19,21 +19,21 @@
 <div id="app" class="p-4">
 
     <div class="mb-4">
-        <strong>Welcome [[=user['first_name']]]</strong>
+        <h2 class="title is-4"><strong>Welcome [[=user['first_name']]]</strong></h2>
     </div>
 
     <div class="columns">
 
         <!-- ───── LEFT COLUMN  –  forms ─────────────────────────── -->
-        <div class="column is-one-quarter">
+        <div class="column is-two-fifths">
             <h3 class="title is-5">Add Ingredient</h3>
             [[=ingredients_form]]
             <hr>
-            <button class="button is-primary" @click="openModal">Add New Recipe</button>
+            <button class="button is-primary is-fullwidth" @click="openModal">Add New Recipe</button>
         </div>
 
         <!-- ───── MIDDLE COLUMN  –  recipe search / list ─────────── -->
-        <div class="column">
+        <div class="column is-half">
             <h3 class="title is-5">Recipes</h3>
 
             <div class="field">
@@ -44,16 +44,16 @@
             </div>
 
             <!-- recipe cards -->
-            <article v-for="recipe in filtered_recipes" :key="recipe.id" class="card mb-3">
+            <article v-for="recipe in filtered_recipes" :key="recipe.id" class="card">
                 <header class="card-header">
+                    <p class="card-header-title has-text-centered p-2">{{ recipe.name }}</p>
+                    <span class="has-text-centered p-2">Type: {{ recipe.type }}</span>
+                    <span class="has-text-centered p-2">Total Cal: {{ recipe.total_calories }}</span>
                     <button  v-if="recipe.author === user_id"
-                      class="button is-small is-light ml-2"
+                      class="button is-light ml-2"
                       @click="startEdit(recipe.id)">
                       ✏️ Edit
                     </button>
-                    <p class="card-header-title">{{ recipe.name }}</p>
-                    <span class="mr-3">Type: {{ recipe.type }}</span>
-                    <span>Total Cal: {{ recipe.total_calories }}</span>
                 </header>
 
                 <div class="card-content">
@@ -67,7 +67,7 @@
                     <p><strong>Ingredients per serving:</strong></p>
                     <ul class="ml-4">
                     <li v-for="ing in recipe.ingredients" :key="ing.id">
-                        {{ ing.qty }} {{ ing.unit }} – {{ ing.name }}
+                        {{ ing.name }} - {{ ing.qty }} : {{ ing.unit }}
                     </li>
                     </ul>
                 </div>
@@ -75,7 +75,7 @@
         </div>
 
         <!-- ───── RIGHT COLUMN – ingredient search / list ────────── -->
-        <div class="column is-one-quarter">
+        <div class="column is-two-fifths">
             <h3 class="title is-5">Ingredients</h3>
 
             <div class="field">
