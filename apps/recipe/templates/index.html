@@ -37,7 +37,7 @@
         <div class="column is-half">
             <h3 class="title is-5">Recipes</h3>
         
-            <div class="field">
+            <div class="field mt-2 pb-1">
                 <div class="control has-icons-left is-expanded">
                     <input class="input"
                            type="text"
@@ -52,7 +52,7 @@
                 <p class="control">
                     <div class="dropdown pt-1">
                         <!--  TO STYLE -->
-                        <select v-model="selected_type" @change="filter_recipes">
+                        <select class="is-size-6" v-model="selected_type" @change="filter_recipes">
                             <option value="">Select type</option>
                             <option v-for="t in recipe_types" :key="t" :value="t">
                                 {{ t }}
@@ -112,7 +112,7 @@
         <div class="column is-two-fifths">
             <h3 class="title is-5">Ingredients</h3>
 
-            <div class="field">
+            <div class="field mt-2 pb-1">
                 <div class="control has-icons-left">
                     <input class="input"
                     type="text"

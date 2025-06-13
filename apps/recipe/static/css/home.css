@@ -72,13 +72,6 @@ button:hover {
     font-size: 1.2rem;
 }
 
-.select select.dropdown {
-    background: #66d1ff;
-    color: #fff;
-    border: none;
-    /*border: 1px solid #66d1ff;*/
-}
-
 /* Search bar */
 input[type="text"] {
     width: 100%;
