@@ -170,7 +170,7 @@ const app = {
 
     /* data loaders */
     loadRecipes() {
-      ajax("/recipe/api/recipes", "GET", null, (res) => {
+      ajax("/recipe/api/internalrecipes", "GET", null, (res) => {
         this.recipes = res.recipes;
         this.filtered_recipes = res.recipes;
       });
