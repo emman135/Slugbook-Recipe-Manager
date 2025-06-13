@@ -114,8 +114,8 @@ def populate_db():
             measure = meal.get(f"strMeasure{i}")
 
             if ingredient_name and ingredient_name.strip():
-                    ingredient_cal = random.randint(1, 50)
-                    calories += ingredient_cal
+                    ingredient_cal = random.randint(1, 20)
+                    
                     quantity, unit_str = parse_measure(measure)
                     ingredient = db.ingredients.insert(
                         name=ingredient_name,
@@ -123,21 +123,29 @@ def populate_db():
                         calories_per_unit=ingredient_cal,
                         description="imported",
                     )
-                    
+
+                    calories += ingredient_cal*quantity
+
                     db.link.insert(
                         recipe_id=recipe_id,
                         ingredient_id=ingredient.id,
                         quantity_per_serving=quantity,
                     )
+        
+        # our app calculates cal automatically based on quantity and calories of its ingredients (for user added recipes)
+        # I tried to implement the logic here for imported ones but I decided if the random cal values lead to a abnormally large value to just repick a more resonable one
+        # This allows me to generate more believeable calorie values for individual ingredients while keepign somewhat normal total cal values for imported meals
+        if calories > 2000:
+            calories = random.randint(600,850)
         record = db.recipes[recipe_id]
         record.update_record(total_calories=calories)
 
 if db(db.recipes).count() == 0:
     populate_db()
     db.commit()
-    print("Database population complete.")
-'''
+    print("Database population complete.")@
 
+'''
 db.link.truncate()
 db.recipes.truncate()
 db.ingredients.truncate()
