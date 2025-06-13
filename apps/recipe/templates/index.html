@@ -64,6 +64,12 @@
                     <p><strong>Description:</strong> {{ recipe.description }}</p>
                     <p><strong>Instructions:</strong> {{ recipe.instruction_steps }}</p>
                     <p><strong>Servings:</strong> {{ recipe.servings }}</p>
+                    <p><strong>Ingredients per serving:</strong></p>
+                    <ul class="ml-4">
+                    <li v-for="ing in recipe.ingredients" :key="ing.id">
+                        {{ ing.qty }} {{ ing.unit }} – {{ ing.name }}
+                    </li>
+                    </ul>
                 </div>
             </article>
         </div>

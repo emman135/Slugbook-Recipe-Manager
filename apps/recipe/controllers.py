@@ -59,7 +59,30 @@ def api_ingredients():
 @action("api/recipes", method=["GET"])
 @action.uses(db)
 def api_recipes():
-    return dict(recipes=db(db.recipes).select().as_list())
+    # plain dicts
+    recs  = db(db.recipes).select().as_list()
+    links = db(db.link).select().as_list()
+    ings  = db(db.ingredients).select().as_list()
+
+    # quick lookup: ingredient_id → {name, unit}
+    ing_map = {row["id"]: row for row in ings}
+
+    # gather links by recipe
+    by_recipe = {}
+    for l in links:
+        rid = l["recipe_id"]
+        by_recipe.setdefault(rid, []).append({
+            "id":   l["ingredient_id"],
+            "name": ing_map[l["ingredient_id"]]["name"],
+            "unit": ing_map[l["ingredient_id"]]["unit"],
+            "qty":  l["quantity_per_serving"],
+        })
+
+    # attach to each recipe
+    for r in recs:
+        r["ingredients"] = by_recipe.get(r["id"], [])
+
+    return dict(recipes=recs)
 
 @action("api/recipe/<rid:int>", method=["GET"])
 @action.uses(db)
