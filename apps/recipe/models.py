@@ -108,16 +108,19 @@ def populate_db():
             author=None,  # No author, imported from API
         )
 
+        calories = 0
         for i in range(1,21):
             ingredient_name = meal.get(f"strIngredient{i}")
             measure = meal.get(f"strMeasure{i}")
 
             if ingredient_name and ingredient_name.strip():
+                    ingredient_cal = random.randint(1, 50)
+                    calories += ingredient_cal
                     quantity, unit_str = parse_measure(measure)
                     ingredient = db.ingredients.insert(
                         name=ingredient_name,
                         unit=unit_str,
-                        calories_per_unit=random.randint(1, 50),
+                        calories_per_unit=ingredient_cal,
                         description="imported",
                     )
                     
@@ -126,13 +129,15 @@ def populate_db():
                         ingredient_id=ingredient.id,
                         quantity_per_serving=quantity,
                     )
+        record = db.recipes[recipe_id]
+        record.update_record(total_calories=calories)
 
 if db(db.recipes).count() == 0:
     populate_db()
     db.commit()
     print("Database population complete.")
-
 '''
+
 db.link.truncate()
 db.recipes.truncate()
 db.ingredients.truncate()
