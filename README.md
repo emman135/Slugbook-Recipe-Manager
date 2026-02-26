@@ -1,5 +1,6 @@
 # Slugbook Recipe Manager
 Contributers: Emma Nguyen, Nathan Dong, Ann Sasi, Chris Hein, Jennie Lin, Aryan Sidbatte
+
 Date: June 14, 2025
 
 # Overview
